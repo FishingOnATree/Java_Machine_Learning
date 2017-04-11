@@ -3,6 +3,11 @@ package Exceptions;
 import util.Messages;
 
 public class InvalidMatrixFormatException extends Exception {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9190681346571079779L;
+
 	public InvalidMatrixFormatException(int row, int col) {
 		super(Messages.getMessage(String.format("The matrix dimension: (%d, %d) is invalid", row, col)));
 	}
