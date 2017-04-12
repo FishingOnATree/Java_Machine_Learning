@@ -27,7 +27,7 @@ public class Matrix {
 		values = matrix;
 	}
 	
-	public Matrix transpose()  throws InvalidMatrixFormatException {
+	public Matrix transpose() throws InvalidMatrixFormatException {
 		double[][] tValues = new double[col][row];
 		for (int i=0; i<row; i++) {
 			for (int j=0; j<col; j++) {
@@ -35,6 +35,28 @@ public class Matrix {
 			}
 		}
 		return new Matrix(tValues);
+	}
+	
+	public Matrix dot(Matrix matrix) throws InvalidMatrixFormatException {
+		return dot(this, matrix);
+	}
+	
+	public static Matrix dot(Matrix m1, Matrix m2) throws InvalidMatrixFormatException {
+		if (m1.col != m2.row) {
+			throw new InvalidMatrixFormatException(m1.row, m1.col, m2.row, m2.col);
+		} else {
+			double[][] tValues = new double[m1.row][m2.col];
+			for (int i=0; i<m1.row; i++) {
+				for (int j=0; j<m2.col; j++) {
+					double value = 0; 
+					for (int k=0; k<m1.col; k++) {
+						value += m1.values[i][k] * m2.values[k][j];
+					}
+					tValues[i][j] = value;
+				}
+			}
+			return new Matrix(tValues);
+		}
 	}
 	
 	private void initFields(int row, int col) throws InvalidMatrixFormatException {
@@ -66,7 +88,6 @@ public class Matrix {
 		int idx = 0;
 		while (it.hasNext()) {
 			int sampleIdx = it.next(); 
-			tValues[idx] = new double[col];
 			System.arraycopy(values[sampleIdx], 0, tValues[idx], 0, col);
 			idx++;
 		}
@@ -108,7 +129,8 @@ public class Matrix {
 			Matrix a = new Matrix(m);
 			System.out.println(a.toString());
 			System.out.println(a.transpose().toString());
-			System.out.println(a.randomRowBatch(3).toString());
+			System.out.println(a.transpose().dot(a).toString());
+			System.out.println(a.randomRowBatch(2).toString());
 			a.apply(new SigmoidActivation());
 			System.out.println(a.toString());
 		} catch (Exception e) {
